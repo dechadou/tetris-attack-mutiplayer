@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
 
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -18,62 +18,28 @@
 <body>
 <div class="container">
     <div class="row">
-        <div class="col-6">
-            <div class="row player">
-                <div class="col-3">
-                    <h1 class="vertical">Player 1</h1>
-                    <div class="score text-right">
-                        <div class="line"></div>
-                        <div id="scoreText-0">0</div>
-                        puntos
-                        <div class="line"></div>
-                        <small id="highScore-0"></small>
-                    </div>
-                </div>
-                <div class="col-9">
-                    <div id="game-0" class="game">
-                        <div id="gameOver-0" class="gameOver">
-                            <h1 class="text-white my-auto">:(</h1>
-                        </div>
-                        <canvas id="tetris-canvas-0"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="row player">
-                <div class="col-9">
-                    <div id="game-1" class="game">
-                        <div id="gameOver-1" class="gameOver">
-                            <h1 class="text-white my-auto">:(</h1>
-                        </div>
-                        <canvas id="tetris-canvas-1"></canvas>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <h1 class="vertical">Player 2</h1>
-                    <div class="score text-right">
-                        <div class="line"></div>
-                        <div id="scoreText-1">0</div>
-                        puntos
-                        <div class="line"></div>
-                        <small id="highScore-1"></small>
-                    </div>
-                </div>
-            </div>
+        <div class="col-12 text-center">
+            <h1>Tetris Attack</h1>
+            <small>by Rodrigo & Juama</small>
         </div>
     </div>
-
-
+    <div class="row">
+        <div class="col-12 text-center">
+            <p>Your room: <span class="code"></p>
+            <a class="btn btn-primary" href="/abc">Jugar!</a>
+        </div>
+    </div>
+</div>
 </body>
 <script src="/socket.io/socket.io.js"></script>
-<script type="text/javascript" src="libs/mainloop.min.js"></script>
-<script type="text/javascript" src="libs/keydrown.min.js"></script>
-<script type="text/javascript" src="libs/hammer.min.js"></script>
-<script type="text/javascript" src="game/global_constants.js"></script>
-<script type="text/javascript" src="game/draw.js"></script>
-<script type="text/javascript" src="game/block.js"></script>
-<script type="text/javascript" src="game/game.js"></script>
-<script type="text/javascript" src="game/cursor.js"></script>
-<script type="text/javascript" src="game/tetris-attack.js"></script>
+<script src="libs/random.generator.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function (event) {
+        const room = generateName();
+        const code = document.querySelector('.code');
+        code.innerHTML = room;
+        const href = document.querySelector('a');
+        href.setAttribute('href', '/' + room);
+    });
+</script>
 </html>
