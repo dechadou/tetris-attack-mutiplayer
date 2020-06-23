@@ -121,13 +121,13 @@ function TaGame(type) {
     this.loadSprites = function (blocks, cursors) {
         for (let i = 1; i <= blocks.names.length; i++) {
             blocks.sprites[i] = new Image();
-            blocks.sprites[i].src = 'static/sprites/' + blocks.names[i - 1] + '.png';
+            blocks.sprites[i].src = 'sprites/' + blocks.names[i - 1] + '.png';
         }
         GLOBAL.nrBlockSprites = blocks.names.length;
 
         for (let i = 1; i <= cursors.names.length; i++) {
             cursors.sprites[i] = new Image();
-            cursors.sprites[i].src = 'static/sprites/' + cursors.names[i - 1] + '.png';
+            cursors.sprites[i].src = 'sprites/' + cursors.names[i - 1] + '.png';
         }
         GLOBAL.nrCursorSprites = cursors.names.length;
     }

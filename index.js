@@ -1,16 +1,19 @@
 const express = require('express');
 const path = require('path');
-const PORT = process.env.PORT || 5000;
+const app = express();
+const PORT = process.env.PORT || 8081;
+const server = require('http').Server(app);
 
-express()
+app
     .use(express.static(path.join(__dirname, 'public')))
-    .get('/', (req, res) => res.sendFile(__dirname + '/public/index.html'))
-    .get('/:room', (req, res) => res.sendFile(__dirname + '/public/index.html'))
-    .listen(PORT, () => console.log(`Listening on ${ PORT }`));
+    .set('views', path.join(__dirname, 'views'))
+    .set('view engine', 'ejs')
+    .get('/', (req, res) => res.render('index'))
+    .get('/:room', (req, res) => res.render('index'));
+server.listen(PORT, () => console.log(`Listening on ${PORT}`));
 
 //var index = require('http').Server(app);
-var io = require('socket.io').listen(PORT);
-
+var io = require('socket.io').listen(server);
 
 
 //app.use('/static', express.static(__dirname + '/public'));
@@ -38,9 +41,9 @@ io.on('connection', function (socket) {
             isReady: false,
         };
 
-        if(currentPlayers.hasOwnProperty(room)){
-            currentPlayers[room] ++;
-        }else{
+        if (currentPlayers.hasOwnProperty(room)) {
+            currentPlayers[room]++;
+        } else {
             currentPlayers[room] = 1;
         }
 
@@ -58,7 +61,7 @@ io.on('connection', function (socket) {
 
         socket.on('setupGame', function (data) {
             if (data) {
-                console.log(players[socket.id].playerId + ' emitted SetupGame on room '+room);
+                console.log(players[socket.id].playerId + ' emitted SetupGame on room ' + room);
                 players[socket.id].totalTicks = data.totalTicks;
                 players[socket.id].score = data.score;
                 players[socket.id].blocks = data.gameBlocks;
@@ -110,9 +113,9 @@ io.on('connection', function (socket) {
             }
         });
 
-        socket.on('GameOver', function(data){
-           console.log('Game over on room '+ room);
-           socket.in(room).broadcast.emit('GameOver');
+        socket.on('GameOver', function (data) {
+            console.log('Game over on room ' + room);
+            socket.in(room).broadcast.emit('GameOver');
         });
 
         // when a player disconnects, remove them from our players object
@@ -121,8 +124,8 @@ io.on('connection', function (socket) {
             // remove this player from our players object
             delete players[socket.id];
             currentPlayers[room]--;
-            if(currentPlayers[room] === 0){
-                console.log('No more users in room '+currentPlayers[room]);
+            if (currentPlayers[room] === 0) {
+                console.log('No more users in room ' + currentPlayers[room]);
                 delete currentPlayers[room];
             }
 
@@ -130,7 +133,6 @@ io.on('connection', function (socket) {
             io.emit('disconnect', socket.id);
         });
     });
-
 
 
 });
