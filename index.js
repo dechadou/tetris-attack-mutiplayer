@@ -1,11 +1,14 @@
 var express = require('express');
 var app = express();
-var index = require('http').Server(app);
-var io = require('socket.io').listen(index);
+const PORT = process.env.PORT || 5000
+
+//var index = require('http').Server(app);
+var io = require('socket.io').listen(PORT);
 
 
 
 app.use('/static', express.static(__dirname + '/public'));
+app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/public/index.html');
@@ -126,6 +129,6 @@ io.on('connection', function (socket) {
 
 });
 
-index.listen(8081, function () {
+/*index.listen(8081, function () {
     console.log(`Listening on ${index.address().port}`);
-});
+});*/
