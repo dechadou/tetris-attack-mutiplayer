@@ -38,6 +38,7 @@ socket.on('serverSetup', function (playerInfo) {
                     serverGame.nextLine[x][0].render(true)
                 }
                 player2 = playerInfo[id];
+                document.querySelector('#player2').innerHTML = 'player 2';
                 socket.emit('playerReady');
             } catch (e) {
                 if (e instanceof SyntaxError) {
