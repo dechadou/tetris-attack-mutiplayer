@@ -1,22 +1,28 @@
-var express = require('express');
-var app = express();
-const PORT = process.env.PORT || 5000
+const express = require('express');
+const path = require('path');
+const PORT = process.env.PORT || 5000;
+
+express()
+    .use(express.static(path.join(__dirname, 'public')))
+    .get('/', (req, res) => res.sendFile(__dirname + '/public/index.html'))
+    .get('/:room', (req, res) => res.sendFile(__dirname + '/public/index.html'))
+    .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 //var index = require('http').Server(app);
 var io = require('socket.io').listen(PORT);
 
 
 
-app.use('/static', express.static(__dirname + '/public'));
-app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
+//app.use('/static', express.static(__dirname + '/public'));
+//app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
-app.get('/', function (req, res) {
+/*app.get('/', function (req, res) {
     res.sendFile(__dirname + '/public/index.html');
 });
 app.get('/:room', function (req, res) {
     res.sendFile(__dirname + '/public/index.html');
 });
-
+*/
 
 let maxPlayers = 2;
 let players = {};
