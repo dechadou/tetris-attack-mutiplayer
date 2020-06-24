@@ -30,6 +30,7 @@ app.get('/:room', function (req, res) {
 let maxPlayers = 2;
 let players = {};
 let currentPlayers = {};
+let currentRoomPlayers = {};
 
 io.on('connection', function (socket) {
 
@@ -39,7 +40,14 @@ io.on('connection', function (socket) {
         players[socket.id] = {
             playerId: socket.id,
             isReady: false,
+            room: room
         };
+
+        if (!currentRoomPlayers.hasOwnProperty(room)) {
+            currentRoomPlayers[room] = [];
+        }
+        currentRoomPlayers[room].push(players[socket.id]);
+
 
         if (currentPlayers.hasOwnProperty(room)) {
             currentPlayers[room]++;
@@ -57,7 +65,7 @@ io.on('connection', function (socket) {
         socket.emit('connected', players[socket.id]);
 
         //Let the other clients know that this player connected, and also if there was already one player connected
-        io.in(room).emit('secondPlayerConnected', players);
+        io.in(room).emit('secondPlayerConnected', currentRoomPlayers[room]);
 
         socket.on('setupGame', function (data) {
             if (data) {
@@ -66,7 +74,7 @@ io.on('connection', function (socket) {
                 players[socket.id].score = data.score;
                 players[socket.id].blocks = data.gameBlocks;
                 players[socket.id].nextLine = data.nextLine;
-                io.in(room).emit('serverSetup', players);
+                io.in(room).emit('serverSetup', currentRoomPlayers[room]);
             }
         });
 

@@ -74,6 +74,7 @@ socket.on('disconnect', function (playerId) {
 
 
 
+
 function setupGame() {
     clientGame = new TaGame('client');
     serverGame = new TaGame('server');

@@ -1,34 +1,35 @@
-function TaGame(type) {
-    this.type = type;
-    this.mySelf = this;
-    this.index = null;
-    this.gameWidth = null;
-    this.gameHeight = null;
-    this.width = null;
-    this.height = null;
-    this.nr_blocks = null;
-    this.blocks = null;
-    this.nextLine = null;
-    this.combo = null;
-    this.chain = null;
-    this.config = null;
-    this.command = null;
-    this.cursor = null;
-    this.serverCursor = null;
-    this.wall = null;
-    this.score = 0;
-    this.scoreText = null;
-    this.pushTime = 0;
-    this.pushCounter = 0;
-    this.totalTicks = 0;
-
-    this.canvas = null;
-    this.ctx = null;
-    this.gameDom = null;
-    this.scoreBoard = null;
-    this.highScore = null;
-    this.gameOverScreen = null;
-    this.serverData = null;
+class TaGame {
+    constructor(type) {
+        this.type = type;
+        this.mySelf = this;
+        this.index = null;
+        this.gameWidth = null;
+        this.gameHeight = null;
+        this.width = null;
+        this.height = null;
+        this.nr_blocks = null;
+        this.blocks = null;
+        this.nextLine = null;
+        this.combo = null;
+        this.chain = null;
+        this.config = null;
+        this.command = null;
+        this.cursor = null;
+        this.serverCursor = null;
+        this.wall = null;
+        this.score = 0;
+        this.scoreText = null;
+        this.pushTime = 0;
+        this.pushCounter = 0;
+        this.totalTicks = 0;
+        this.canvas = null;
+        this.ctx = null;
+        this.gameDom = null;
+        this.scoreBoard = null;
+        this.highScore = null;
+        this.gameOverScreen = null;
+        this.serverData = null;
+    }
 
     /* Initializes a new game.
      *
@@ -36,7 +37,7 @@ function TaGame(type) {
      * height is the height of the blocks array.
      * nr_blocks is the number of different block sprites to be used.
      */
-    this.newGame = function (width, height, nr_blocks, index, serverData) {
+    newGame(width, height, nr_blocks, index, serverData) {
         console.log('start ' + this.type + ' game');
         this.index = index;
         this.serverData = serverData;
@@ -57,19 +58,19 @@ function TaGame(type) {
         }
         this.fillBlocks(this.blocks, width, 4);
 
-        if(this.type === 'client'){
+        if (this.type === 'client') {
             this.nextLine = this.newBlocks(width, 1);
         }
-        if(this.type === 'server'){
+        if (this.type === 'server') {
             this.nextLine = this.serverBlocks(width, 1, this.serverData);
         }
         this.fillBlocks(this.nextLine, width, 1);
 
-        if(this.type === 'client'){
+        if (this.type === 'client') {
             this.cursor = new Cursor(this.canvas, this.ctx);
             this.cursor.init(this.mySelf);
         }
-        if(this.type === 'server'){
+        if (this.type === 'server') {
             this.serverCursor = new Cursor(this.canvas, this.ctx);
             this.serverCursor.init(this.mySelf);
         }
@@ -81,16 +82,17 @@ function TaGame(type) {
 
         this.score = 0;
 
-        getHighScore();
+        if (ENABLE_HIGHSCORE) {
+            getHighScore();
+        }
         this.wall = new Block(this.ctx);
         this.wall.initWall(this.mySelf);
 
         this.updateNeighbors();
-
-        //this.render();
     };
 
-    this.drawGame = function () {
+
+    drawGame() {
         this.gameDom = document.getElementById('game-' + this.index);
         this.canvas = document.getElementById('tetris-canvas-' + this.index);
         if (this.type === 'client') {
@@ -118,7 +120,7 @@ function TaGame(type) {
 
     };
 
-    this.loadSprites = function (blocks, cursors) {
+    loadSprites(blocks, cursors) {
         for (let i = 1; i <= blocks.names.length; i++) {
             blocks.sprites[i] = new Image();
             blocks.sprites[i].src = 'sprites/' + blocks.names[i - 1] + '.png';
@@ -137,15 +139,15 @@ function TaGame(type) {
      *
      * Returns 1 if succesfull.
      */
-    this.push = function () {
+    push() {
         if (this.isDanger(1)) {
             this.gameOver();
             return 0;
         }
-        if(this.type === 'client'){
+        if (this.type === 'client') {
             var blocks = this.newBlocks(this.width, this.height);
         }
-        if(this.type === 'server'){
+        if (this.type === 'server') {
             var blocks = this.serverBlocks(this.width, this.height, this.serverData);
         }
         for (var x = 0; x < this.width; x++) {
@@ -156,10 +158,10 @@ function TaGame(type) {
             blocks[x][0] = this.nextLine[x][0];
         }
         this.blocks = blocks;
-        if(this.type === 'client'){
+        if (this.type === 'client') {
             this.nextLine = this.newBlocks(6, 1);
         }
-        if(this.type === 'server'){
+        if (this.type === 'server') {
             this.nextLine = this.serverBlocks(6, 1, this.serverData);
         }
         this.fillBlocks(this.nextLine, 6, 1);
@@ -171,7 +173,7 @@ function TaGame(type) {
         return 1;
     }
 
-    this.pushTick = function (count) {
+    pushTick(count) {
         if (this.chain)
             return;
         this.pushCounter -= count;
@@ -181,13 +183,13 @@ function TaGame(type) {
         }
     };
 
-    this.pushFast = function () {
+    pushFast() {
         this.pushTick(100);
     };
 
     /* Ends the current game.
      */
-    this.gameOver = function () {
+    gameOver() {
         for (var x = 0; x < this.width; x++) {
             for (var y = 0; y < this.height; y++) {
                 if (this.blocks[x][y].sprite) {
@@ -201,9 +203,19 @@ function TaGame(type) {
         socket.emit('GameOver');
     };
 
-    this.win = function () {
-        this.gameOver();
+    win() {
+        for (var x = 0; x < this.width; x++) {
+            for (var y = 0; y < this.height; y++) {
+                if (this.blocks[x][y].sprite) {
+                    MainLoop.stop();
+                }
+            }
+        }
+        this.pushCounter = 0;
+        this.canvas.remove();
+        this.gameOverScreen.style.display = "block";
         this.gameOverScreen.innerHTML = "<h1 class=\"text-white my-auto\">:)</h1>";
+        socket.emit('Win');
     };
 
     /* Create a grid of block objects.
@@ -212,7 +224,7 @@ function TaGame(type) {
      * height is the height of the grid.
      * returns the grid.
      */
-    this.newBlocks = function (width, height) {
+    newBlocks(width, height) {
         var blocks = new Array(width);
         for (var x = 0; x < width; x++) {
             blocks[x] = new Array(height);
@@ -224,7 +236,7 @@ function TaGame(type) {
         return blocks;
     };
 
-    this.serverBlocks = function (width, height, serverBlocks) {
+    serverBlocks(width, height, serverBlocks) {
         var blocks = new Array(width);
         for (var x = 0; x < width; x++) {
             blocks[x] = new Array(height);
@@ -254,7 +266,7 @@ function TaGame(type) {
      * width is the width of the portion to fill
      * height is the height of the portion to fill
      */
-    this.fillBlocks = function (blocks, width, height) {
+    fillBlocks(blocks, width, height) {
         for (var x = 0; x < width; x++) {
             for (var y = 0; y < height; y++) {
                 blocks[x][y].newBlock();
@@ -264,7 +276,7 @@ function TaGame(type) {
 
     /* Updates the neighbor references in each block in the grid.
      */
-    this.updateNeighbors = function () {
+    updateNeighbors() {
         var block;
         for (var x = 0; x < this.width; x++) {
             for (var y = 0; y < this.height; y++) {
@@ -301,9 +313,9 @@ function TaGame(type) {
      * Blocks are only dependent on the state of their under-neighbor, so
      * this can be done from the bottom up.
      */
-    this.updateState = function () {
-        for (var x = 0; x < this.width; x++) {
-            for (var y = 0; y < this.height; y++) {
+    updateState() {
+        for (let x = 0; x < this.width; x++) {
+            for (let y = 0; y < this.height; y++) {
                 this.blocks[x][y].updateState();
                 this.blocks[x][y].x = x;
                 this.blocks[x][y].y = y;
@@ -317,7 +329,7 @@ function TaGame(type) {
      * combo is the amount of blocks participating in the combo
      * chain is whether a chain is currently happening.
      */
-    this.updateCnc = function () {
+    updateCnc() {
         var combo;
         var chain = false;
 
@@ -342,6 +354,7 @@ function TaGame(type) {
         });
 
         combo = this.combo.length;
+        let block;
         while ((block = this.combo.pop()) != undefined) {
             block.state = CLEAR;
             block.counter = CLEAREXPLODETIME * combo + CLEARBLINKTIME + CLEARPAUSETIME;
@@ -356,7 +369,7 @@ function TaGame(type) {
 
     /* Swaps two blocks at location (x,y) and (x+1,y) if swapping is possible
      */
-    this.swap = function (x, y) {
+    swap(x, y) {
         if (!this.blocks[x][y].isSwappable()
             || !this.blocks[x + 1][y].isSwappable())
             return;
@@ -366,7 +379,7 @@ function TaGame(type) {
     /* Checks if the current chain is over.
      * returns a boolean
      */
-    this.chainOver = function () {
+    chainOver() {
         var chain = true;
         for (var x = 0; x < this.width; x++) {
             for (var y = 0; y < this.height; y++) {
@@ -382,7 +395,7 @@ function TaGame(type) {
      * combo is an int
      * returns a int as score
      */
-    this.comboToScore = function (combo) {
+    comboToScore(combo) {
         switch (combo) {
             case 4:
                 return 20;
@@ -411,7 +424,7 @@ function TaGame(type) {
      * chain is an int
      * returns a int as score
      */
-    this.chainToScore = function (chain) {
+    chainToScore(chain) {
         switch (chain) {
             case 2:
                 return 50;
@@ -447,7 +460,7 @@ function TaGame(type) {
      * height is the distance to the top.
      * returns a boolean
      */
-    this.isDanger = function (height) {
+    isDanger(height) {
         for (var x = 0; x < this.width; x++) {
             for (var y = this.height - 1; y > (this.height - 1) - height; y--) {
                 if (this.blocks[x][y].sprite) {
@@ -464,7 +477,7 @@ function TaGame(type) {
      * calculate the current score,
      * spawn possible garbage.
      */
-    this.tick = function () {
+    tick() {
         kd.tick();
         this.totalTicks++;
         this.pushTick(1);
@@ -518,24 +531,22 @@ function TaGame(type) {
      * coordinates in the grid. Then copies the entire grid to an upscaled
      * canvas to maintain pixelart.
      */
-    this.render = function () {
+    render() {
         this.ctx.fillRect(0, 0, SQ * this.width, SQ * (this.height + 1));
         for (var x = 0; x < this.width; x++) {
             for (var y = 0; y < this.height; y++) {
                 this.blocks[x][y].render();
             }
         }
-
-
-        if(this.type === 'client'){
+        if (this.type === 'client') {
             for (var x = 0; x < this.width; x++) {
                 this.nextLine[x][0].render(true)
             }
 
             this.cursor.render();
-
         }
-        if(this.type === 'server') {
+
+        if (this.type === 'server') {
             this.serverCursor.render();
         }
 
@@ -548,7 +559,7 @@ function TaGame(type) {
 
 
         this.ctx.fillStyle = GAME_BACKGROUND;
-        if (this.type === 'client') {
+        if (this.type === 'client' && ENABLE_HIGHSCORE) {
             this.scoreBoard.textContent = score;
             setHighScore(this.score);
         }

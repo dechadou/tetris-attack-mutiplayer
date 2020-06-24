@@ -2,6 +2,7 @@ const SCALE = 1;
 const GAME_WIDTH = 6;
 const GAME_HEIGHT = 9;
 const GAME_BACKGROUND = '#f2f2f2';
+const ENABLE_HIGHSCORE = false;
 const UPS = 60;
 const SQ = SquareSize = 64;
 const HIGHSCORE = 'tagame-highscore';
