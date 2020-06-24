@@ -65,14 +65,18 @@ socket.on('readyToStart', function () {
     console.log('Ready to start!!!!');
     create();
 });
-socket.on('disconnect', function (playerId) {
+
+socket.on('WinGame', function () {
     serverGame.gameOver();
     clientGame.win();
     player2 = null;
 });
 
-
-
+socket.on('disconnect', function (playerId) {
+    serverGame.gameOver();
+    clientGame.win();
+    player2 = null;
+});
 
 
 function setupGame() {

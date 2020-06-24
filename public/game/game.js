@@ -142,6 +142,7 @@ class TaGame {
     push() {
         if (this.isDanger(1)) {
             this.gameOver();
+            socket.emit('GameOver');
             return 0;
         }
         if (this.type === 'client') {
@@ -199,8 +200,7 @@ class TaGame {
         }
         this.pushCounter = 0;
         this.canvas.remove();
-        this.gameOverScreen.style.display = "block";
-        socket.emit('GameOver');
+        this.gameOverScreen.style.display = "flex";
     };
 
     win() {
@@ -213,9 +213,8 @@ class TaGame {
         }
         this.pushCounter = 0;
         this.canvas.remove();
-        this.gameOverScreen.style.display = "block";
+        this.gameOverScreen.style.display = "flex";
         this.gameOverScreen.innerHTML = "<h1 class=\"text-white my-auto\">:)</h1>";
-        socket.emit('Win');
     };
 
     /* Create a grid of block objects.
@@ -538,11 +537,12 @@ class TaGame {
                 this.blocks[x][y].render();
             }
         }
-        if (this.type === 'client') {
-            for (var x = 0; x < this.width; x++) {
-                this.nextLine[x][0].render(true)
-            }
 
+        for (var x = 0; x < this.width; x++) {
+            this.nextLine[x][0].render(true)
+        }
+
+        if (this.type === 'client') {
             this.cursor.render();
         }
 

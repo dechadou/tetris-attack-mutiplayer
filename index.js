@@ -123,7 +123,7 @@ io.on('connection', function (socket) {
 
         socket.on('GameOver', function (data) {
             console.log('Game over on room ' + room);
-            socket.in(room).broadcast.emit('GameOver');
+            socket.in(room).broadcast.emit('WinGame');
         });
 
         // when a player disconnects, remove them from our players object
