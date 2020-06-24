@@ -73,6 +73,9 @@ class Cursor {
             socket.on('server_mv_swap', (data) => {
                 this.game.swap(data.x, data.y);
             });
+            socket.on('server_mvpushfast', (data) => {
+                this.game.pushFast();
+            })
         }
     }
 

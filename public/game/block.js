@@ -116,6 +116,18 @@ class Block {
         }
     }
 
+    updateServerState(animation_counter, animation_state, explode_counter, counter, state, chain, x, y){
+        this.animation_counter = animation_counter;
+        this.animation_state = animation_state;
+        this.explode_counter = explode_counter;
+        this.counter = counter;
+        this.state = state;
+        this.chain = chain;
+        this.x = x;
+        this.y = y;
+        this.updateState();
+    }
+
     /* Update the current state of this block based on its own state, and the
      * states of its neighbors.
      * Will keep its current state it its counter is still running.

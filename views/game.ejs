@@ -18,22 +18,29 @@
 <body>
 <div class="container">
     <div class="row">
+        <div class="col-12 text-center">
+            <h1>Tetris Attack</h1>
+            <p>by DeChadou & Juama</p>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-6">
             <div class="row player">
                 <div class="col-3">
-                    <h1 class="vertical" id="player1">Player 1</h1>
+                    <h2 class="vertical" id="player1">Player 1</h2>
                     <div class="score text-right">
                         <div class="line"></div>
                         <div id="scoreText-0">0</div>
                         puntos
                         <div class="line"></div>
                         <small id="highScore-0"></small>
+                        <small id="level-0"></small>
                     </div>
                 </div>
                 <div class="col-9">
                     <div id="game-0" class="game">
-                        <div id="gameOver-0" class="gameOver">
-                            <h1 class="text-white my-auto">:(</h1>
+                        <div id="overlayScreen-0" class="overlayScreen">
+                            <h2 class="text-white my-auto">:(</h2>
                         </div>
                         <canvas id="tetris-canvas-0"></canvas>
                     </div>
@@ -44,20 +51,21 @@
             <div class="row player">
                 <div class="col-9">
                     <div id="game-1" class="game">
-                        <div id="gameOver-1" class="gameOver">
-                            <h1 class="text-white my-auto">:(</h1>
+                        <div id="overlayScreen-1" class="overlayScreen">
+                            <h2 class="text-white my-auto">:(</h2>
                         </div>
                         <canvas id="tetris-canvas-1" height="640" width="384"></canvas>
                     </div>
                 </div>
                 <div class="col-3">
-                    <h1 class="vertical" id="player2">Waiting...</h1>
+                    <h2 class="vertical" id="player2">Waiting...</h2>
                     <div class="score text-right">
                         <div class="line"></div>
                         <div id="scoreText-1">0</div>
                         puntos
                         <div class="line"></div>
                         <small id="highScore-1"></small>
+                        <small id="level-1"></small>
                     </div>
                 </div>
             </div>

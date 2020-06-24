@@ -32,20 +32,11 @@ socket.on('serverSetup', function (playerInfo) {
         if (playerInfo[id].playerId !== socket.id) {
             console.log('Receiving Server information');
             try {
-                serverGame.newGame(GAME_WIDTH, GAME_HEIGHT, GLOBAL.nrBlockSprites, 1, JSON.parse(playerInfo[id].blocks));
-                serverGame.nextLine = serverGame.serverBlocks(6, 1, JSON.parse(playerInfo[id].nextLine));
-                for (var x = 0; x < serverGame.width; x++) {
-                    serverGame.nextLine[x][0].render(true)
-                }
+                serverGame.setupServerGame(JSON.parse(playerInfo[id].blocks), JSON.parse(playerInfo[id].nextLine));
                 player2 = playerInfo[id];
-                document.querySelector('#player2').innerHTML = 'player 2';
                 socket.emit('playerReady');
             } catch (e) {
-                if (e instanceof SyntaxError) {
-                    console.log(e, true);
-                } else {
-                    console.log(e, false);
-                }
+                console.log(e, true);
             }
 
         }
@@ -53,12 +44,7 @@ socket.on('serverSetup', function (playerInfo) {
 });
 socket.on('playerUpdated', function (playerInfo) {
     if (playerInfo.playerId !== socket.id) {
-        const scoreText = document.querySelector('#scoreText-1');
-        scoreText.innerHTML = playerInfo.score;
-        serverGame.nextLine = serverGame.serverBlocks(6, 1, JSON.parse(playerInfo.nextLine));
-        for (var x = 0; x < serverGame.width; x++) {
-            serverGame.nextLine[x][0].render(true)
-        }
+        serverGame.updateServerSide(playerInfo);
     }
 });
 socket.on('readyToStart', function () {

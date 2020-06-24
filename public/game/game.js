@@ -27,8 +27,12 @@ class TaGame {
         this.gameDom = null;
         this.scoreBoard = null;
         this.highScore = null;
-        this.gameOverScreen = null;
+        this.overlayScreen = null;
         this.serverData = null;
+        this.player1 = null;
+        this.player2 = null;
+        this.level = 1;
+        this.levelText = null;
     }
 
     /* Initializes a new game.
@@ -99,8 +103,11 @@ class TaGame {
             this.scoreBoard = document.getElementById('scoreText-' + this.index);
         }
 
+        this.player1 = document.getElementById('player1');
+        this.player2 = document.getElementById('player2');
         this.highScore = document.getElementById('highScore-' + this.index);
-        this.gameOverScreen = document.getElementById('gameOver-' + this.index);
+        this.overlayScreen = document.getElementById('overlayScreen-' + this.index);
+        this.levelText = document.getElementById('level-' + this.index);
 
         this.canvas.height = SQ * (GAME_HEIGHT + 1) * SCALE;
         this.canvas.width = SQ * GAME_WIDTH * SCALE;
@@ -116,7 +123,9 @@ class TaGame {
 
         this.loadSprites(BLOCKS, CURSORS);
 
-        this.highScore.textContent = 'HighScore: ' + localStorage.getItem(HIGHSCORE);
+        if (ENABLE_HIGHSCORE) {
+            this.highScore.textContent = 'HighScore: ' + localStorage.getItem(HIGHSCORE);
+        }
 
     };
 
@@ -140,12 +149,13 @@ class TaGame {
      * Returns 1 if succesfull.
      */
     push() {
-        if (this.isDanger(1)) {
-            this.gameOver();
-            socket.emit('GameOver');
-            return 0;
-        }
         if (this.type === 'client') {
+            if (this.isDanger(1)) {
+                this.gameOver();
+                socket.emit('GameOver');
+                return 0;
+            }
+
             var blocks = this.newBlocks(this.width, this.height);
         }
         if (this.type === 'server') {
@@ -177,6 +187,7 @@ class TaGame {
     pushTick(count) {
         if (this.chain)
             return;
+
         this.pushCounter -= count;
         if (this.pushCounter <= 0) {
             this.pushCounter = this.pushTime;
@@ -186,6 +197,9 @@ class TaGame {
 
     pushFast() {
         this.pushTick(100);
+        if (this.type === 'client') {
+            socket.emit('mv_mvpushfast');
+        }
     };
 
     /* Ends the current game.
@@ -200,7 +214,9 @@ class TaGame {
         }
         this.pushCounter = 0;
         this.canvas.remove();
-        this.gameOverScreen.style.display = "flex";
+        this.player2.innerHTML = 'wiiinner';
+        this.player1.innerHTML = 'loooser';
+        this.overlayScreen.style.display = "flex";
     };
 
     win() {
@@ -213,8 +229,10 @@ class TaGame {
         }
         this.pushCounter = 0;
         this.canvas.remove();
-        this.gameOverScreen.style.display = "flex";
-        this.gameOverScreen.innerHTML = "<h1 class=\"text-white my-auto\">:)</h1>";
+        this.overlayScreen.style.display = "flex";
+        this.player1.innerHTML = 'wiiinner';
+        this.player2.innerHTML = 'loooser';
+        this.overlayScreen.innerHTML = "<h2 class=\"text-white my-auto\">:)</h2>";
     };
 
     /* Create a grid of block objects.
@@ -318,6 +336,16 @@ class TaGame {
                 this.blocks[x][y].updateState();
                 this.blocks[x][y].x = x;
                 this.blocks[x][y].y = y;
+            }
+        }
+    }
+
+    updateServerState(blocks) {
+        for (let x = 0; x < this.width; x++) {
+            for (let y = 0; y < this.height; y++) {
+                this.blocks[x][y].updateServerState(blocks[x][y].animation_counter, blocks[x][y].animation_state, blocks[x][y].explode_counter, blocks[x][y].counter, blocks[x][y].state, blocks[x][y].chain, blocks[x][y].x, blocks[x][y].y);
+                //this.blocks[x][y].x = x;
+                //this.blocks[x][y].y = y;
             }
         }
     }
@@ -470,6 +498,16 @@ class TaGame {
         return false;
     }
 
+    setLevel() {
+        if (this.score !== 0) {
+            this.level = Math.floor(this.score / 30);
+        } else {
+            this.level = 1;
+        }
+        this.levelText.innerText = 'Level '+ this.level;
+    }
+
+
     /* The tick function is the main function of the TaGame object.
      * It gets called every tick and executes the other internal functions.
      * It will update the grid,
@@ -479,9 +517,12 @@ class TaGame {
     tick() {
         kd.tick();
         this.totalTicks++;
-        this.pushTick(1);
+        this.setLevel();
+        this.pushTick(this.level);
         this.updateNeighbors();
-        this.updateState();
+        if (this.type === 'client') {
+            this.updateState();
+        }
         // combo n chain
         var cnc = this.updateCnc();
         if (this.chain) {
@@ -532,6 +573,7 @@ class TaGame {
      */
     render() {
         this.ctx.fillRect(0, 0, SQ * this.width, SQ * (this.height + 1));
+        this.ctx.fillStyle = GAME_BACKGROUND;
         for (var x = 0; x < this.width; x++) {
             for (var y = 0; y < this.height; y++) {
                 this.blocks[x][y].render();
@@ -557,11 +599,37 @@ class TaGame {
             chain += "chain: " + (this.chain + 1);
         }
 
+        if(this.type === 'client'){
+            if(chain != ''){
+                this.scoreBoard.textContent = score + ' ('+chain +')';
+            } else {
+                this.scoreBoard.textContent = score;
+                if (ENABLE_HIGHSCORE) {
+                    setHighScore(this.score);
+                }
+            }
+        }
 
-        this.ctx.fillStyle = GAME_BACKGROUND;
-        if (this.type === 'client' && ENABLE_HIGHSCORE) {
-            this.scoreBoard.textContent = score;
-            setHighScore(this.score);
+
+    }
+
+    setupServerGame(blocks, nextLine) {
+        this.newGame(GAME_WIDTH, GAME_HEIGHT, GLOBAL.nrBlockSprites, 1, blocks);
+        this.nextLine = this.serverBlocks(6, 1, nextLine);
+        for (var x = 0; x < this.width; x++) {
+            this.nextLine[x][0].render(true)
+        }
+        document.querySelector('#player2').innerHTML = 'player 2';
+    }
+
+    updateServerSide(playerInfo) {
+        this.score = playerInfo.score;
+        const scoreText = document.querySelector('#scoreText-1');
+        scoreText.innerHTML = this.score;
+        this.updateServerState(JSON.parse(playerInfo.blocks));
+        this.nextLine = this.serverBlocks(6, 1, JSON.parse(playerInfo.nextLine));
+        for (var x = 0; x < this.width; x++) {
+            this.nextLine[x][0].render(true)
         }
     }
 }

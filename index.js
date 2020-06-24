@@ -110,12 +110,15 @@ io.on('connection', function (socket) {
         socket.on('mv_swap', function (data) {
             socket.in(room).broadcast.emit('server_mv_swap', data)
         });
+        socket.on('mv_mvpushfast', function (data) {
+            socket.in(room).broadcast.emit('server_mvpushfast', data)
+        });
 
         socket.on('playerUpdate', function (data) {
             if (data) {
                 players[socket.id].totalTicks = data.totalTicks;
                 players[socket.id].score = data.score;
-                players[socket.id].blocks = data.blocks;
+                players[socket.id].blocks = data.gameBlocks;
                 players[socket.id].nextLine = data.nextLine;
                 socket.in(room).broadcast.emit('playerUpdated', players[socket.id]);
             }
