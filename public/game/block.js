@@ -110,8 +110,10 @@ class Block {
      * If none is specified, a random sprite will be picked.
      */
     newBlock() {
-        // No block number given, so generate random block
-        this.sprite = (Math.floor(Math.random() * GLOBAL.nrBlockSprites)) + 1;
+        if (this.sprite === undefined) {
+            // No block number given, so generate random block
+            this.sprite = (Math.floor(Math.random() * GLOBAL.nrBlockSprites)) + 1;
+        }
     }
 
     /* Update the current state of this block based on its own state, and the
