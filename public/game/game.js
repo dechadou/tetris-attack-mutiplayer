@@ -619,13 +619,13 @@ class TaGame {
     }
 
     updateServerSide(playerInfo) {
-        this.score = playerInfo.score;
-        const scoreText = document.querySelector('#scoreText-1');
-        scoreText.innerHTML = this.score;
-        this.updateServerState(JSON.parse(playerInfo.blocks));
         this.nextLine = this.serverBlocks(6, 1, JSON.parse(playerInfo.nextLine));
         for (var x = 0; x < this.width; x++) {
             this.nextLine[x][0].render(true)
         }
+        this.score = playerInfo.score;
+        const scoreText = document.querySelector('#scoreText-1');
+        scoreText.innerHTML = this.score;
+        this.updateServerState(JSON.parse(playerInfo.blocks));
     }
 }

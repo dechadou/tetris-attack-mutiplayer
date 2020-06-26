@@ -86,45 +86,28 @@ function update() {
     sendEmitters();
 }
 
+
+
 function sendEmitters(emitterName = 'playerUpdate') {
     // Emit block layout
     let blocks = {};
     [...clientGame.blocks].forEach((element, x) => {
         blocks[x] = {};
         [...element].forEach((Block, y) => {
-            blocks[x][y] = {};
-            blocks[x][y]['animation_counter'] = Block.animation_counter;
-            blocks[x][y]['animation_state'] = Block.animation_state;
-            blocks[x][y]['chain'] = Block.chain;
-            blocks[x][y]['counter'] = Block.counter;
-            blocks[x][y]['explode_counter'] = Block.explode_counter;
-            blocks[x][y]['garbage'] = Block.garbage;
-            blocks[x][y]['state'] = Block.state;
-            blocks[x][y]['x'] = Block.x;
-            blocks[x][y]['y'] = Block.y;
-            blocks[x][y]['sprite'] = Block.sprite;
+            blocks[x][y] = Block.getData();
         })
     });
 
 
     //Emit next line
-    let nextLine = [];
+    let nextLine = {};
     [...clientGame.nextLine].forEach((element, x) => {
         nextLine[x] = {};
         [...element].forEach((Block, y) => {
-            nextLine[x][y] = {};
-            nextLine[x][y]['animation_counter'] = Block.animation_counter;
-            nextLine[x][y]['animation_state'] = Block.animation_state;
-            nextLine[x][y]['chain'] = Block.chain;
-            nextLine[x][y]['counter'] = Block.counter;
-            nextLine[x][y]['explode_counter'] = Block.explode_counter;
-            nextLine[x][y]['garbage'] = Block.garbage;
-            nextLine[x][y]['state'] = Block.state;
-            nextLine[x][y]['x'] = Block.x;
-            nextLine[x][y]['y'] = Block.y;
-            nextLine[x][y]['sprite'] = Block.sprite;
+            nextLine[x][y] = Block.getData();
         })
     });
+
 
     socket.emit(emitterName, {
         'totalTicks': clientGame.totalTicks,
