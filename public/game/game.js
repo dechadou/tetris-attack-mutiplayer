@@ -498,8 +498,11 @@ class TaGame {
         return false;
     }
 
+    /*
+    Define current Level
+     */
     setLevel() {
-        this.level = Math.floor((this.score / 30)/15)+1; // plus 1 because it starts at score 0.
+        this.level = Math.floor((this.score / 30)/10)+1; // plus 1 because it starts at score 0.
         this.levelText.innerText = 'Level '+ this.level;
     }
 
@@ -514,7 +517,7 @@ class TaGame {
         kd.tick();
         this.totalTicks++;
         this.setLevel();
-        this.pushTick(1);
+        this.pushTick(this.level);
         this.updateNeighbors();
         if (this.type === 'client') {
             this.updateState();
