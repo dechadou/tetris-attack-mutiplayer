@@ -116,15 +116,46 @@ class Block {
         }
     }
 
-    updateServerState(animation_counter, animation_state, explode_counter, counter, state, chain, x, y) {
+    updateServerState(animation_counter, animation_state, explode_counter, counter, state, sprite, chain, x, y, above, under, left, right) {
         this.animation_counter = animation_counter;
         this.animation_state = animation_state;
         this.explode_counter = explode_counter;
         this.counter = counter;
         this.state = state;
         this.chain = chain;
+        this.sprite = sprite;
         this.x = x;
         this.y = y;
+
+        this.above = new Block(this.ctx);
+        if (above && above.x !== null && above.y !== null) {
+            this.above.init(this.game, above.x, above.y, above.animation_counter, above.animation_state, above.counter, above.state, above.chain, above.explode_counter, above.garbage, above.sprite);
+        } else {
+            this.above = this.game.wall;
+        }
+
+        if (left && left.x !== null && left.y !== null) {
+            this.left = new Block(this.ctx);
+            this.left.init(this.game, left.x, left.y, left.animation_counter, left.animation_state, left.counter, left.state, left.chain, left.explode_counter, left.garbage, left.sprite);
+        } else {
+            this.left = this.game.wall;
+        }
+
+        if (under && under.x !== null && under.y !== null) {
+            this.under = new Block(this.ctx);
+            this.under.init(this.game, under.x, under.y, under.animation_counter, under.animation_state, under.counter, under.state, under.chain, under.explode_counter, under.garbage, under.sprite);
+        } else {
+            this.under = this.game.wall;
+        }
+
+        if (right && right.x !== null && right.y !== null) {
+            this.right = new Block(this.ctx);
+            this.right.init(this.game, right.x, right.y, right.animation_counter, right.animation_state, right.counter, right.state, right.chain, right.explode_counter, right.garbage, right.sprite);
+        } else {
+            this.right = this.game.wall;
+        }
+
+
         this.updateState();
     }
 

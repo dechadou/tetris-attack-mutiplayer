@@ -343,9 +343,21 @@ class TaGame {
     updateServerState(blocks) {
         for (let x = 0; x < this.width; x++) {
             for (let y = 0; y < this.height; y++) {
-                this.blocks[x][y].updateServerState(blocks[x][y].animation_counter, blocks[x][y].animation_state, blocks[x][y].explode_counter, blocks[x][y].counter, blocks[x][y].state, blocks[x][y].chain, blocks[x][y].x, blocks[x][y].y);
-                //this.blocks[x][y].x = x;
-                //this.blocks[x][y].y = y;
+                this.blocks[x][y].updateServerState(
+                    blocks[x][y].animation_counter,
+                    blocks[x][y].animation_state,
+                    blocks[x][y].explode_counter,
+                    blocks[x][y].counter,
+                    blocks[x][y].state,
+                    blocks[x][y].sprite,
+                    blocks[x][y].chain,
+                    blocks[x][y].x,
+                    blocks[x][y].y,
+                    blocks[x][y].above,
+                    blocks[x][y].under,
+                    blocks[x][y].left,
+                    blocks[x][y].right
+                );
             }
         }
     }
@@ -502,8 +514,8 @@ class TaGame {
     Define current Level
      */
     setLevel() {
-        this.level = Math.floor((this.score / 30)/10)+1; // plus 1 because it starts at score 0.
-        this.levelText.innerText = 'Level '+ this.level;
+        this.level = Math.floor((this.score / 30) / 10) + 1; // plus 1 because it starts at score 0.
+        this.levelText.innerText = 'Level ' + this.level;
     }
 
 
@@ -598,9 +610,9 @@ class TaGame {
             chain += "chain: " + (this.chain + 1);
         }
 
-        if(this.type === 'client'){
-            if(chain != ''){
-                this.scoreBoard.textContent = score + ' ('+chain +')';
+        if (this.type === 'client') {
+            if (chain != '') {
+                this.scoreBoard.textContent = score + ' (' + chain + ')';
             } else {
                 this.scoreBoard.textContent = score;
                 if (ENABLE_HIGHSCORE) {
