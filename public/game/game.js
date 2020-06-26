@@ -33,6 +33,7 @@ class TaGame {
         this.player2 = null;
         this.level = 1;
         this.levelText = null;
+        this.pause = false;
     }
 
     /* Initializes a new game.
@@ -575,8 +576,18 @@ class TaGame {
         }
         // spawn garbage
 
-
     };
+
+    /*
+     * Pause the game
+     */
+    pauseGame() {
+        this.pause = true;
+    }
+
+    resumeGame() {
+        this.pause = false;
+    }
 
     /* Updates the coordinates of the sprite objects to the corresponding
      * coordinates in the grid. Then copies the entire grid to an upscaled

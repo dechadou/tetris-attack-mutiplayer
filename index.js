@@ -114,6 +114,17 @@ io.on('connection', function (socket) {
             socket.in(room).broadcast.emit('server_mvpushfast', data)
         });
 
+        socket.on('PauseGame', function(){
+            console.log('pause');
+            io.in(room).emit('GamePaused');
+        });
+
+        socket.on('PlayGame', function(){
+            console.log('resume');
+            io.in(room).emit('GameResumed');
+        });
+
+
         socket.on('playerUpdate', function (data) {
             if (data) {
                 players[socket.id].totalTicks = data.totalTicks;
