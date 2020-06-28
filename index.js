@@ -140,6 +140,22 @@ io.on('connection', function (socket) {
             socket.in(room).broadcast.emit('WinGame');
         });
 
+        socket.on('PlayerActionedRematch', function(){
+            let readyToRematch = true;
+            players[socket.id].rematch = true;
+            if (currentPlayers[room] === maxPlayers) {
+                Object.keys(players).forEach(function (id) {
+                    if (!players[id].rematch) {
+                        readyToRematch = false;
+                    }
+                });
+
+                if (readyToRematch) {
+                    io.in(room).emit('RematchStart');
+                }
+            }
+        });
+
         // when a player disconnects, remove them from our players object
         socket.on('disconnect', function () {
             console.log('User ' + socket.id + ' disconnected');

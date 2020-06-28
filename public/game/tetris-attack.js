@@ -10,6 +10,7 @@ if (room) {
 }
 
 
+
 function setupGame() {
     clientGame = new TaGame('client');
     serverGame = new TaGame('server');
@@ -19,6 +20,11 @@ function create() {
     //Init Game
     GLOBAL.taGame_list[0] = clientGame;
     GLOBAL.taGame_list[1] = serverGame;
+
+    if(clientGame.pause){
+        clientGame.resumeGame();
+        serverGame.resumeGame();
+    }
 
     MainLoop.setSimulationTimestep(1000 / UPS);
     MainLoop.setUpdate(update).setDraw(render).start();

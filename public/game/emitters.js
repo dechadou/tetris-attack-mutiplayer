@@ -25,6 +25,5 @@ function sendEmitters(emitterName = 'playerUpdate') {
         'nextLine': JSON.stringify(nextLine),
         'score': clientGame.score
     });
-
-
 }
+

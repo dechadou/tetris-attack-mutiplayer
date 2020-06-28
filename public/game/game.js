@@ -28,12 +28,15 @@ class TaGame {
         this.scoreBoard = null;
         this.highScore = null;
         this.overlayScreen = null;
+        this.player2OverlayScreen = null;
         this.serverData = null;
         this.player1 = null;
         this.player2 = null;
         this.level = 1;
         this.levelText = null;
         this.pause = false;
+        this.rematchBtn = null;
+        this.rematch = false;
     }
 
     /* Initializes a new game.
@@ -108,7 +111,13 @@ class TaGame {
         this.player2 = document.getElementById('player2');
         this.highScore = document.getElementById('highScore-' + this.index);
         this.overlayScreen = document.getElementById('overlayScreen-' + this.index);
+        this.player2OverlayScreen = document.getElementById('overlayScreen-1');
         this.levelText = document.getElementById('level-' + this.index);
+        this.rematchBtn = document.getElementById('rematch-0');
+        this.rematchBtn.addEventListener('click', () => {
+            this.rematchBtn.style.display = 'none';
+            socket.emit('PlayerActionedRematch');
+        });
 
         this.canvas.height = SQ * (GAME_HEIGHT + 1) * SCALE;
         this.canvas.width = SQ * GAME_WIDTH * SCALE;
@@ -129,6 +138,7 @@ class TaGame {
         }
 
     };
+
 
     loadSprites(blocks, cursors) {
         for (let i = 1; i <= blocks.names.length; i++) {
@@ -214,10 +224,11 @@ class TaGame {
             }
         }
         this.pushCounter = 0;
-        this.canvas.remove();
+        this.pauseGame();
         this.player2.innerHTML = 'wiiinner';
         this.player1.innerHTML = 'loooser';
-        this.overlayScreen.style.display = "flex";
+        this.rematchBtn.style.display = 'block';
+
     };
 
     win() {
@@ -229,11 +240,12 @@ class TaGame {
             }
         }
         this.pushCounter = 0;
-        this.canvas.remove();
-        this.overlayScreen.style.display = "flex";
+        this.pauseGame();
         this.player1.innerHTML = 'wiiinner';
         this.player2.innerHTML = 'loooser';
-        this.overlayScreen.innerHTML = "<h2 class=\"text-white my-auto\">:)</h2>";
+        const h2 = this.overlayScreen.querySelector('h2');
+        h2.innerText = ':)';
+        this.rematchBtn.style.display = 'block';
     };
 
     /* Create a grid of block objects.
@@ -583,10 +595,16 @@ class TaGame {
      */
     pauseGame() {
         this.pause = true;
+        this.canvas.style.display = 'none';
+        this.overlayScreen.style.display = 'flex';
+        this.player2OverlayScreen.style.display = 'flex';
     }
 
     resumeGame() {
         this.pause = false;
+        this.canvas.style.display = 'block';
+        this.overlayScreen.style.display = 'none';
+        this.player2OverlayScreen.style.display = 'none';
     }
 
     /* Updates the coordinates of the sprite objects to the corresponding
