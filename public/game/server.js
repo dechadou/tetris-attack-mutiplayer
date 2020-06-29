@@ -62,7 +62,7 @@ Game is ready to start!
 socket.on('readyToStart', function () {
     console.log('Ready to start!!!!');
     startCounter();
-    create();
+    //create();
 });
 
 /*
@@ -133,11 +133,17 @@ function setupServerGame(player) {
 
 function startCounter() {
     let counter = 5;
+    p1_overlayScreen.style.display = 'flex';
+    p2_overlayScreen.style.display = 'flex';
     const p1 = p1_overlayScreen.querySelector('h2.face');
     const p2 = p2_overlayScreen.querySelector('h2.face');
-    var downloadTimer = setInterval(function () {
-        if (counter === 0) {
+    p1.style.display = 'block';
+    p2.style.display = 'block';
+
+    let downloadTimer = setInterval(function () {
+        if (counter <= 0) {
             clearInterval(downloadTimer);
+            create();
         }
         p1.innerText = counter;
         p2.innerText = counter;
