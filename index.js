@@ -40,7 +40,9 @@ io.on('connection', function (socket) {
         players[socket.id] = {
             playerId: socket.id,
             isReady: false,
-            room: room
+            room: room,
+            rematch: false
+            
         };
 
         if (!currentRoomPlayers.hasOwnProperty(room)) {
