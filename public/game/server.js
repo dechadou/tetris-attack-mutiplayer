@@ -77,6 +77,14 @@ socket.on('RematchStart', function () {
     connectLocalPlayer(player1);
 });
 
+socket.on('HistoricBoardUpdated', function(playerInfo){
+    if (playerInfo.playerId !== socket.id) {
+        if(serverGame.historicBoard !== null){
+            serverGame.updateHistoricBoard(playerInfo);
+        }
+    }
+});
+
 
 /*
 Connection lost.

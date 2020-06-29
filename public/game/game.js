@@ -38,6 +38,9 @@ class TaGame {
         this.pause = false;
         this.rematchBtn = null;
         this.rematch = false;
+        this.wins = 0;
+        this.lost = 0;
+        this.historicBoard = null;
     }
 
     /* Initializes a new game.
@@ -48,6 +51,9 @@ class TaGame {
      */
     newGame(width, height, nr_blocks, index, serverData) {
         console.log('start ' + this.type + ' game');
+        /* Reset variables before starting a new game */
+        //this.resetVariables();
+        
         this.index = index;
         this.serverData = serverData;
         this.drawGame();
@@ -116,6 +122,8 @@ class TaGame {
         this.player2OverlayScreen = document.getElementById('overlayScreen-1');
         this.levelText = document.getElementById('level-' + this.index);
         this.rematchBtn = document.getElementById('rematch-0');
+        this.rematchBtn.innerText = 'Rematch?';
+        this.historicBoard = document.getElementById('wins_lost-' + this.index);
         this.rematchBtn.addEventListener('click', () => {
             this.rematchBtn.innerText = 'Rematch!';
             socket.emit('PlayerActionedRematch');
@@ -134,6 +142,8 @@ class TaGame {
         this.ctx.fillRect(0, 0, SQ * GAME_WIDTH, SQ * (GAME_HEIGHT + 1));
 
         this.loadSprites(BLOCKS, CURSORS);
+
+        this.updateHistoricBoard();
 
         if (ENABLE_HIGHSCORE) {
             this.highScore.textContent = 'HighScore: ' + localStorage.getItem(HIGHSCORE);
@@ -165,7 +175,6 @@ class TaGame {
         if (this.type === 'client') {
             if (this.isDanger(1)) {
                 this.gameOver();
-                socket.emit('GameOver');
                 return 0;
             }
 
@@ -225,6 +234,7 @@ class TaGame {
                 }
             }
         }
+
         this.pushCounter = 0;
         this.pauseGame();
         this.overlayScreen.style.backgroundColor = 'black';
@@ -238,6 +248,14 @@ class TaGame {
         const p2h2pface = this.player2OverlayScreen.querySelector('h2.face');
         p2h2pface.innerText = ':)';
         p2h2pface.style.display = 'block';
+        if(this.type === 'client'){
+            this.lost++;
+        }
+        this.updateHistoricBoard();
+        if (this.type === 'client') {
+            socket.emit('GameOver');
+            return false;
+        }
     };
 
     win() {
@@ -261,7 +279,24 @@ class TaGame {
         const p2h2pface = this.player2OverlayScreen.querySelector('h2.face');
         p2h2pface.innerText = ':(';
         p2h2pface.style.display = 'block';
+        if(this.type === 'client'){
+            this.wins++;
+        }
+        this.updateHistoricBoard();
     };
+
+    updateHistoricBoard(playerInfo = null) {
+        if (playerInfo !== null) {
+            this.wins = playerInfo.wins;
+            this.lost = playerInfo.lost;
+            this.historicBoard.innerText = 'W: ' + this.wins + ' - L:' + this.lost;
+        } else {
+            this.historicBoard.innerText = 'W: ' + this.wins + ' - L:' + this.lost;
+            if (this.type === 'client') {
+                socket.emit('HistoricBoardUpdate', {wins: this.wins, lost: this.lost})
+            }
+        }
+    }
 
     /* Create a grid of block objects.
      *

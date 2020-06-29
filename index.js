@@ -139,6 +139,9 @@ io.on('connection', function (socket) {
 
         socket.on('GameOver', function (data) {
             console.log('Game over on room ' + room);
+            Object.keys(players).forEach(function (id) {
+                players[id].rematch = false;
+            });
             socket.in(room).broadcast.emit('WinGame');
         });
 
@@ -157,6 +160,12 @@ io.on('connection', function (socket) {
                 }
             }
         });
+
+        socket.on('HistoricBoardUpdate', function(data){
+            players[socket.id].wins = data.wins;
+            players[socket.id].lost = data.lost;
+            socket.in(room).broadcast.emit('HistoricBoardUpdated', players[socket.id]);
+        })
 
         // when a player disconnects, remove them from our players object
         socket.on('disconnect', function () {

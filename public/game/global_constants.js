@@ -86,3 +86,27 @@ const ANIM_LANDTIME = 4;
 const ANIM_CLEARBLINKTIME = 38;
 const ANIM_CLEARFACETIME = 20
 const ANIM_DANGERTIME = 6;
+
+
+const p1_gameDom = document.getElementById('game-0');
+const p2_gameDom = document.getElementById('game-1');
+
+const p1_canvas = document.getElementById('tetris-canvas-0');
+const p2_canvas = document.getElementById('tetris-canvas-1');
+
+const p1_scoreBoard = document.getElementById('scoreText-0');
+const p2_scoreBoard = document.getElementById('scoreText-1');
+
+const p1_title = document.getElementById('player1');
+const p2_title = document.getElementById('player2');
+
+const p1_highScore = document.getElementById('highScore-0');
+const p2_highScore = document.getElementById('highScore-1');
+
+const p1_overlayScreen = document.getElementById('overlayScreen-0');
+const p2_overlayScreen = document.getElementById('overlayScreen-1');
+
+const p1_levelText = document.getElementById('level-0');
+const p2_levelText = document.getElementById('level-1');
+
+const p1_rematchBtn = document.getElementById('rematch-0');
