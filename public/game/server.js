@@ -61,6 +61,7 @@ Game is ready to start!
  */
 socket.on('readyToStart', function () {
     console.log('Ready to start!!!!');
+    startCounter();
     create();
 });
 
@@ -77,9 +78,9 @@ socket.on('RematchStart', function () {
     connectLocalPlayer(player1);
 });
 
-socket.on('HistoricBoardUpdated', function(playerInfo){
+socket.on('HistoricBoardUpdated', function (playerInfo) {
     if (playerInfo.playerId !== socket.id) {
-        if(serverGame.historicBoard !== null){
+        if (serverGame.historicBoard !== null) {
             serverGame.updateHistoricBoard(playerInfo);
         }
     }
@@ -128,4 +129,18 @@ function setupServerGame(player) {
 
         }
     });
+}
+
+function startCounter() {
+    let counter = 5;
+    const p1 = p1_overlayScreen.querySelector('h2.face');
+    const p2 = p2_overlayScreen.querySelector('h2.face');
+    var downloadTimer = setInterval(function () {
+        if (counter === 0) {
+            clearInterval(downloadTimer);
+        }
+        p1.innerText = counter;
+        p2.innerText = counter;
+        counter--;
+    }, 1000);
 }

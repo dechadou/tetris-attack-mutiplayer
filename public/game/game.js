@@ -53,7 +53,7 @@ class TaGame {
         console.log('start ' + this.type + ' game');
         /* Reset variables before starting a new game */
         //this.resetVariables();
-        
+
         this.index = index;
         this.serverData = serverData;
         this.drawGame();
