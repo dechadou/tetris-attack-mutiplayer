@@ -23,6 +23,7 @@ class TaGame {
         this.pushCounter = 0;
         this.totalTicks = 0;
         this.canvas = null;
+        this.serverCanvas = null;
         this.ctx = null;
         this.gameDom = null;
         this.scoreBoard = null;
@@ -106,6 +107,7 @@ class TaGame {
         if (this.type === 'client') {
             this.scoreBoard = document.getElementById('scoreText-' + this.index);
         }
+        this.serverCanvas = document.getElementById('tetris-canvas-1');
 
         this.player1 = document.getElementById('player1');
         this.player2 = document.getElementById('player2');
@@ -115,7 +117,7 @@ class TaGame {
         this.levelText = document.getElementById('level-' + this.index);
         this.rematchBtn = document.getElementById('rematch-0');
         this.rematchBtn.addEventListener('click', () => {
-            this.rematchBtn.style.display = 'none';
+            this.rematchBtn.innerText = 'Rematch!';
             socket.emit('PlayerActionedRematch');
         });
 
@@ -225,10 +227,17 @@ class TaGame {
         }
         this.pushCounter = 0;
         this.pauseGame();
+        this.overlayScreen.style.backgroundColor = 'black';
         this.player2.innerHTML = 'wiiinner';
         this.player1.innerHTML = 'loooser';
         this.rematchBtn.style.display = 'block';
-
+        const p1h2face = this.overlayScreen.querySelector('h2.face');
+        p1h2face.innerText = ':(';
+        p1h2face.style.display = 'block';
+        this.rematchBtn.style.display = 'block';
+        const p2h2pface = this.player2OverlayScreen.querySelector('h2.face');
+        p2h2pface.innerText = ':)';
+        p2h2pface.style.display = 'block';
     };
 
     win() {
@@ -243,9 +252,15 @@ class TaGame {
         this.pauseGame();
         this.player1.innerHTML = 'wiiinner';
         this.player2.innerHTML = 'loooser';
-        const h2 = this.overlayScreen.querySelector('h2');
-        h2.innerText = ':)';
+        this.overlayScreen.style.backgroundColor = 'black';
+
+        const h2face = this.overlayScreen.querySelector('h2.face');
+        h2face.innerText = ':)';
+        h2face.style.display = 'block';
         this.rematchBtn.style.display = 'block';
+        const p2h2pface = this.player2OverlayScreen.querySelector('h2.face');
+        p2h2pface.innerText = ':(';
+        p2h2pface.style.display = 'block';
     };
 
     /* Create a grid of block objects.
@@ -596,6 +611,7 @@ class TaGame {
     pauseGame() {
         this.pause = true;
         this.canvas.style.display = 'none';
+        this.serverCanvas.style.display = 'none';
         this.overlayScreen.style.display = 'flex';
         this.player2OverlayScreen.style.display = 'flex';
     }
@@ -603,6 +619,7 @@ class TaGame {
     resumeGame() {
         this.pause = false;
         this.canvas.style.display = 'block';
+        this.serverCanvas.style.display = 'block';
         this.overlayScreen.style.display = 'none';
         this.player2OverlayScreen.style.display = 'none';
     }
