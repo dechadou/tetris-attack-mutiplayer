@@ -133,6 +133,7 @@ io.on('connection', function (socket) {
                 players[socket.id].score = data.score;
                 players[socket.id].blocks = data.gameBlocks;
                 players[socket.id].nextLine = data.nextLine;
+                players[socket.id].level = data.level;
                 socket.in(room).broadcast.emit('playerUpdated', players[socket.id]);
             }
         });

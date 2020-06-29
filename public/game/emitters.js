@@ -23,7 +23,9 @@ function sendEmitters(emitterName = 'playerUpdate') {
         'totalTicks': clientGame.totalTicks,
         'gameBlocks': JSON.stringify(blocks),
         'nextLine': JSON.stringify(nextLine),
-        'score': clientGame.score
+        'score': clientGame.score,
+        'level': clientGame.level
     });
+
 }
 

@@ -54,6 +54,7 @@ Detect server updates and apply on the server Game.
 socket.on('playerUpdated', function (playerInfo) {
     if (playerInfo.playerId !== socket.id) {
         serverGame.updateServerSide(playerInfo);
+        clientGame.setLevel(playerInfo.level);
     }
 });
 /*
