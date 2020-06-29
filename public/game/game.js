@@ -248,7 +248,7 @@ class TaGame {
         const p2h2pface = this.player2OverlayScreen.querySelector('h2.face');
         p2h2pface.innerText = ':)';
         p2h2pface.style.display = 'block';
-        if(this.type === 'client'){
+        if (this.type === 'client') {
             this.lost++;
         }
         this.updateHistoricBoard();
@@ -279,7 +279,7 @@ class TaGame {
         const p2h2pface = this.player2OverlayScreen.querySelector('h2.face');
         p2h2pface.innerText = ':(';
         p2h2pface.style.display = 'block';
-        if(this.type === 'client'){
+        if (this.type === 'client') {
             this.wins++;
         }
         this.updateHistoricBoard();
@@ -289,13 +289,12 @@ class TaGame {
         if (playerInfo !== null) {
             this.wins = playerInfo.wins;
             this.lost = playerInfo.lost;
-            this.historicBoard.innerText = 'W: ' + this.wins + ' - L:' + this.lost;
         } else {
-            this.historicBoard.innerText = 'W: ' + this.wins + ' - L:' + this.lost;
             if (this.type === 'client') {
                 socket.emit('HistoricBoardUpdate', {wins: this.wins, lost: this.lost})
             }
         }
+        this.historicBoard.innerHTML = this.wins + ' W<br>' + this.lost + ' L';
     }
 
     /* Create a grid of block objects.

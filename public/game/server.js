@@ -135,6 +135,7 @@ function startCounter() {
     let counter = 5;
     p1_overlayScreen.style.display = 'flex';
     p2_overlayScreen.style.display = 'flex';
+    p1_rematchBtn.style.display = 'none';
     const p1 = p1_overlayScreen.querySelector('h2.face');
     const p2 = p2_overlayScreen.querySelector('h2.face');
     p1.style.display = 'block';
