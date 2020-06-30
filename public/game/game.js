@@ -653,12 +653,18 @@ class TaGame {
         this.player2OverlayScreen.style.display = 'flex';
     }
 
+    /* Resume the game */
     resumeGame() {
         this.pause = false;
         this.canvas.style.display = 'block';
         this.serverCanvas.style.display = 'block';
         this.overlayScreen.style.display = 'none';
         this.player2OverlayScreen.style.display = 'none';
+    }
+
+    /* Reset level at starting a new game */
+    resetLevel(){
+        this.level = 1;
     }
 
     /* Updates the coordinates of the sprite objects to the corresponding
@@ -703,8 +709,6 @@ class TaGame {
                 }
             }
         }
-
-
     }
 
     setupServerGame(blocks, nextLine) {

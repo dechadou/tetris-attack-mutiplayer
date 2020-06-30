@@ -20,6 +20,8 @@ function create() {
     GLOBAL.taGame_list[0] = clientGame;
     GLOBAL.taGame_list[1] = serverGame;
 
+    clientGame.resetLevel();
+    serverGame.resetLevel();
 
     clientGame.resumeGame();
     serverGame.resumeGame();

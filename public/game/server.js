@@ -1,31 +1,5 @@
 let socket = io();
 
-//Pause & Resume
-/*const onVisibilityChange = () => {
-    if (document.visibilityState === 'hidden') {
-        clientGame.pauseGame();
-        serverGame.pauseGame();
-        socket.emit('PauseGame');
-    } else {
-        clientGame.resumeGame();
-        serverGame.resumeGame();
-        socket.emit('PlayGame');
-    }
-};
-document.addEventListener('visibilitychange', onVisibilityChange, false);
-
-//Game is paused!
-socket.on('GamePaused', function(){
-   clientGame.pauseGame();
-   serverGame.pauseGame();
-});
-//Game is Resumed!
-
-socket.on('GameResumed', function(){
-    clientGame.resumeGame();
-    serverGame.resumeGame();
-});
-*/
 
 /*
 On WebSocket connect, setup a new game and let the server know its available.

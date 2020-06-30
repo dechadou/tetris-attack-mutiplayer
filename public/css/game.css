@@ -20,6 +20,8 @@ h2 {
     border-radius: 15px;
     border: 1px solid #333333;
     padding: 10px 10px 20px 10px;
+    height:670px;
+    width: 384px;
 }
 
 canvas {
@@ -29,6 +31,8 @@ canvas {
     border-bottom: 1px solid #333333;
     border-top: 1px solid #333;
     z-index:0;
+    width:100%;
+    height:100%;
     /*background-color:white;
     border-radius: 15px;
     border:1px solid #333333;*/
