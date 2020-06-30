@@ -591,7 +591,7 @@ class TaGame {
     tick() {
         kd.tick();
         this.totalTicks++;
-        if (this.totalTicks % 500 === 0){
+        if (this.totalTicks % GAME_SPEED === 0){
             this.setLevel();
         }
         this.pushTick(this.level);

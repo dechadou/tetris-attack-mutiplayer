@@ -1,5 +1,6 @@
 const SCALE = 1;
 const GAME_INITIAL_COUNTER = 3;
+const GAME_SPEED = 10;
 const GAME_WIDTH = 6;
 const GAME_HEIGHT = 9;
 const GAME_BACKGROUND = '#f2f2f2';
