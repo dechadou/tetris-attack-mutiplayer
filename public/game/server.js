@@ -54,7 +54,6 @@ Detect server updates and apply on the server Game.
 socket.on('playerUpdated', function (playerInfo) {
     if (playerInfo.playerId !== socket.id) {
         serverGame.updateServerSide(playerInfo);
-        clientGame.setLevel(playerInfo.level);
     }
 });
 /*
@@ -133,7 +132,7 @@ function setupServerGame(player) {
 }
 
 function startCounter() {
-    let counter = 5;
+    let counter = GAME_INITIAL_COUNTER;
     p1_overlayScreen.style.display = 'flex';
     p2_overlayScreen.style.display = 'flex';
     p1_rematchBtn.style.display = 'none';

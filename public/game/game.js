@@ -575,12 +575,9 @@ class TaGame {
     /*
     Define current Level
      */
-    setLevel(serverLevel = null) {
-        if (serverLevel && serverLevel > this.level) {
-            this.level = serverLevel;
-        } else {
-            this.level = Math.floor((this.score / 30) / 10) + 1; // plus 1 because it starts at score 0.
-        }
+    setLevel() {
+        //this.level = Math.floor((this.score / 30) / 10) + 1; // plus 1 because it starts at score 0.
+        this.level++;
         this.levelText.innerText = 'Level ' + this.level;
     }
 
@@ -594,7 +591,9 @@ class TaGame {
     tick() {
         kd.tick();
         this.totalTicks++;
-        this.setLevel();
+        if (this.totalTicks % 500 === 0){
+            this.setLevel();
+        }
         this.pushTick(this.level);
         this.updateNeighbors();
         if (this.type === 'client') {
