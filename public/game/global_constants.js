@@ -1,3 +1,4 @@
+const SOLO_MODE = window.location.pathname.startsWith('/solo');
 const SCALE = 1;
 const GAME_INITIAL_COUNTER = 3;
 const GAME_SPEED = 10;

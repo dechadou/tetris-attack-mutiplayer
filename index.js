@@ -9,7 +9,8 @@ app
     .set('views', path.join(__dirname, 'views'))
     .set('view engine', 'ejs')
     .get('/', (req, res) => res.render('index'))
-    .get('/:room', (req, res) => res.render('game'));
+    .get('/solo', (req, res) => res.render('game', {solo: true}))
+    .get('/:room', (req, res) => res.render('game', {solo: false}));
 server.listen(PORT, () => console.log(`Listening on ${PORT}`));
 
 //var index = require('http').Server(app);

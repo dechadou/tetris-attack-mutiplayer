@@ -82,34 +82,44 @@ class Cursor {
     mv_left(){
         if (this.x > 0) {
             this.x--;
-            socket.emit('mv_left', {x: this.x});
+            if (!SOLO_MODE) {
+                socket.emit('mv_left', {x: this.x});
+            }
         }
     }
 
     mv_right(){
         if (this.x < this.game.width - 2) {
             this.x++;
-            socket.emit('mv_right', {x: this.x});
+            if (!SOLO_MODE) {
+                socket.emit('mv_right', {x: this.x});
+            }
         }
     };
 
     mv_down(){
         if (this.y > 0) {
             this.y--;
-            socket.emit('mv_down', {y: this.y});
+            if (!SOLO_MODE) {
+                socket.emit('mv_down', {y: this.y});
+            }
         }
     };
 
     mv_up(){
         if (this.y < this.game.height - 1) {
             this.y++;
-            socket.emit('mv_up', {y: this.y});
+            if (!SOLO_MODE) {
+                socket.emit('mv_up', {y: this.y});
+            }
         }
     };
 
     mv_swap(){
         this.game.swap(this.x, this.y);
-        socket.emit('mv_swap', {x: this.x, y: this.y});
+        if (!SOLO_MODE) {
+            socket.emit('mv_swap', {x: this.x, y: this.y});
+        }
     };
 
 

@@ -126,7 +126,9 @@ class TaGame {
         this.historicBoard = document.getElementById('wins_lost-' + this.index);
         this.rematchBtn.addEventListener('click', () => {
             this.rematchBtn.innerText = 'Rematch!';
-            socket.emit('PlayerActionedRematch');
+            if (!SOLO_MODE) {
+                socket.emit('PlayerActionedRematch');
+            }
         });
 
         this.canvas.height = SQ * (GAME_HEIGHT + 1) * SCALE;
@@ -219,7 +221,7 @@ class TaGame {
 
     pushFast() {
         this.pushTick(100);
-        if (this.type === 'client') {
+        if (this.type === 'client' && !SOLO_MODE) {
             socket.emit('mv_mvpushfast');
         }
     };
@@ -252,7 +254,7 @@ class TaGame {
             this.lost++;
         }
         this.updateHistoricBoard();
-        if (this.type === 'client') {
+        if (this.type === 'client' && !SOLO_MODE) {
             socket.emit('GameOver');
             return false;
         }
@@ -290,7 +292,7 @@ class TaGame {
             this.wins = playerInfo.wins;
             this.lost = playerInfo.lost;
         } else {
-            if (this.type === 'client') {
+            if (this.type === 'client' && !SOLO_MODE) {
                 socket.emit('HistoricBoardUpdate', {wins: this.wins, lost: this.lost})
             }
         }
