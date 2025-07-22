@@ -1,5 +1,4 @@
 function sendEmitters(emitterName = 'playerUpdate') {
-    // Emit block layout
     let blocks = {};
     [...clientGame.blocks].forEach((element, x) => {
         blocks[x] = {};
@@ -9,7 +8,6 @@ function sendEmitters(emitterName = 'playerUpdate') {
     });
 
 
-    //Emit next line
     let nextLine = {};
     [...clientGame.nextLine].forEach((element, x) => {
         nextLine[x] = {};

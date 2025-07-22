@@ -51,8 +51,6 @@ class TaGame {
      */
     newGame(width, height, nr_blocks, index, serverData) {
         console.log('start ' + this.type + ' game');
-        /* Reset variables before starting a new game */
-        //this.resetVariables();
 
         this.index = index;
         this.serverData = serverData;
@@ -113,13 +111,15 @@ class TaGame {
         if (this.type === 'client') {
             this.scoreBoard = document.getElementById('scoreText-' + this.index);
         }
-        this.serverCanvas = document.getElementById('tetris-canvas-1');
+        if (!SOLO_MODE) {
+            this.serverCanvas = document.getElementById('tetris-canvas-1');
+            this.player2OverlayScreen = document.getElementById('overlayScreen-1');
+        }
 
         this.player1 = document.getElementById('player1');
         this.player2 = document.getElementById('player2');
         this.highScore = document.getElementById('highScore-' + this.index);
         this.overlayScreen = document.getElementById('overlayScreen-' + this.index);
-        this.player2OverlayScreen = document.getElementById('overlayScreen-1');
         this.levelText = document.getElementById('level-' + this.index);
         this.rematchBtn = document.getElementById('rematch-0');
         this.rematchBtn.innerText = 'Rematch?';
@@ -240,16 +240,20 @@ class TaGame {
         this.pushCounter = 0;
         this.pauseGame();
         this.overlayScreen.style.backgroundColor = 'black';
-        this.player2.innerHTML = 'wiiinner';
-        this.player1.innerHTML = 'loooser';
+        if (this.player2) this.player2.innerHTML = 'wiiinner';
+        if (this.player1) this.player1.innerHTML = 'loooser';
         this.rematchBtn.style.display = 'block';
         const p1h2face = this.overlayScreen.querySelector('h2.face');
         p1h2face.innerText = ':(';
         p1h2face.style.display = 'block';
         this.rematchBtn.style.display = 'block';
-        const p2h2pface = this.player2OverlayScreen.querySelector('h2.face');
-        p2h2pface.innerText = ':)';
-        p2h2pface.style.display = 'block';
+        if (this.player2OverlayScreen) {
+            const p2h2pface = this.player2OverlayScreen.querySelector('h2.face');
+            if (p2h2pface) {
+                p2h2pface.innerText = ':)';
+                p2h2pface.style.display = 'block';
+            }
+        }
         if (this.type === 'client') {
             this.lost++;
         }
@@ -270,17 +274,21 @@ class TaGame {
         }
         this.pushCounter = 0;
         this.pauseGame();
-        this.player1.innerHTML = 'wiiinner';
-        this.player2.innerHTML = 'loooser';
+        if (this.player1) this.player1.innerHTML = 'wiiinner';
+        if (this.player2) this.player2.innerHTML = 'loooser';
         this.overlayScreen.style.backgroundColor = 'black';
 
         const h2face = this.overlayScreen.querySelector('h2.face');
         h2face.innerText = ':)';
         h2face.style.display = 'block';
         this.rematchBtn.style.display = 'block';
-        const p2h2pface = this.player2OverlayScreen.querySelector('h2.face');
-        p2h2pface.innerText = ':(';
-        p2h2pface.style.display = 'block';
+        if (this.player2OverlayScreen) {
+            const p2h2pface = this.player2OverlayScreen.querySelector('h2.face');
+            if (p2h2pface) {
+                p2h2pface.innerText = ':(';
+                p2h2pface.style.display = 'block';
+            }
+        }
         if (this.type === 'client') {
             this.wins++;
         }
@@ -578,7 +586,6 @@ class TaGame {
     Define current Level
      */
     setLevel() {
-        //this.level = Math.floor((this.score / 30) / 10) + 1; // plus 1 because it starts at score 0.
         this.level++;
         this.levelText.innerText = 'Level ' + this.level;
     }
@@ -601,7 +608,6 @@ class TaGame {
         if (this.type === 'client') {
             this.updateState();
         }
-        // combo n chain
         var cnc = this.updateCnc();
         if (this.chain) {
             if (this.chainOver()) {
@@ -626,22 +632,17 @@ class TaGame {
             }
         }
 
-        /* Calculate the current score */
         if (cnc[0] > 0) {
-            //console.log("combo is ", cnc);
             this.score += (cnc[0] * 10)
             this.score += this.comboToScore(cnc[0]);
             if (cnc[1]) {
                 this.chain++;
-                //  console.log("chain is ", this.chain + 1);
             }
             if (this.chain) {
                 this.score += this.chainToScore(this.chain + 1);
             }
-            //console.log("Score: ", this.score);
         }
-        // spawn garbage
-
+        
     };
 
     /*
@@ -650,18 +651,26 @@ class TaGame {
     pauseGame() {
         this.pause = true;
         this.canvas.style.display = 'none';
-        this.serverCanvas.style.display = 'none';
+        if (this.serverCanvas) {
+            this.serverCanvas.style.display = 'none';
+        }
         this.overlayScreen.style.display = 'flex';
-        this.player2OverlayScreen.style.display = 'flex';
+        if (this.player2OverlayScreen) {
+            this.player2OverlayScreen.style.display = 'flex';
+        }
     }
 
     /* Resume the game */
     resumeGame() {
         this.pause = false;
         this.canvas.style.display = 'block';
-        this.serverCanvas.style.display = 'block';
+        if (this.serverCanvas) {
+            this.serverCanvas.style.display = 'block';
+        }
         this.overlayScreen.style.display = 'none';
-        this.player2OverlayScreen.style.display = 'none';
+        if (this.player2OverlayScreen) {
+            this.player2OverlayScreen.style.display = 'none';
+        }
     }
 
     /* Reset level at starting a new game */
