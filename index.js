@@ -1,8 +1,37 @@
 const express = require('express');
 const path = require('path');
+const net = require('net');
 const app = express();
-const PORT = process.env.PORT || 8081;
 const server = require('http').Server(app);
+
+function isPortAvailable(port) {
+    return new Promise((resolve) => {
+        const testServer = net.createServer();
+        testServer.listen(port, (err) => {
+            if (err) {
+                resolve(false);
+            } else {
+                testServer.close(() => {
+                    resolve(true);
+                });
+            }
+        });
+        testServer.on('error', () => {
+            resolve(false);
+        });
+    });
+}
+
+async function findAvailablePort(startPort = 8081) {
+    let port = startPort;
+    while (port < 65535) {
+        if (await isPortAvailable(port)) {
+            return port;
+        }
+        port++;
+    }
+    throw new Error('No available ports found');
+}
 
 app
     .use(express.static(path.join(__dirname, 'public')))
@@ -15,7 +44,10 @@ app
 var io = require('socket.io').listen(server);
 
 if (require.main === module) {
-    server.listen(PORT, () => console.log(`Listening on ${PORT}`));
+    (async () => {
+        const PORT = process.env.PORT || await findAvailablePort();
+        server.listen(PORT, () => console.log(`Listening on ${PORT}`));
+    })();
 }
 
 let maxPlayers = 2;
