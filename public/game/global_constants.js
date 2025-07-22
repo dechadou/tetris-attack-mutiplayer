@@ -1,7 +1,8 @@
 const SOLO_MODE = window.location.pathname.startsWith('/solo');
 const SCALE = 1;
 const GAME_INITIAL_COUNTER = 3;
-const GAME_SPEED = 10;
+// Level increases based on total ticks. 500 keeps the pace reasonable.
+const GAME_SPEED = 500;
 const GAME_WIDTH = 6;
 const GAME_HEIGHT = 9;
 const GAME_BACKGROUND = '#f2f2f2';
