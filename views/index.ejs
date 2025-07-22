@@ -23,10 +23,15 @@
             <small>by DeChadou & Juama</small>
         </div>
     </div>
+    <div class="row mb-3">
+        <div class="col-12 text-center">
+            <p>Your room: <span class="code"></span></p>
+            <a class="btn btn-primary" id="multi-link" href="/abc">Multiplayer</a>
+        </div>
+    </div>
     <div class="row">
         <div class="col-12 text-center">
-            <p>Your room: <span class="code"></p>
-            <a class="btn btn-primary" href="/abc">Jugar!</a>
+            <a class="btn btn-secondary" href="/solo">Single Player</a>
         </div>
     </div>
 </div>
@@ -38,7 +43,7 @@
         const room = generateName();
         const code = document.querySelector('.code');
         code.innerHTML = room;
-        const href = document.querySelector('a');
+        const href = document.getElementById('multi-link');
         href.setAttribute('href', '/' + room);
     });
 </script>

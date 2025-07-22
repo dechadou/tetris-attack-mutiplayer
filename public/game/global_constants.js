@@ -1,6 +1,8 @@
+const SOLO_MODE = window.location.pathname.startsWith('/solo');
 const SCALE = 1;
 const GAME_INITIAL_COUNTER = 3;
-const GAME_SPEED = 10;
+// Level increases based on total ticks. 500 keeps the pace reasonable.
+const GAME_SPEED = 500;
 const GAME_WIDTH = 6;
 const GAME_HEIGHT = 9;
 const GAME_BACKGROUND = '#f2f2f2';
@@ -24,13 +26,6 @@ const BLOCKS = {
         clear: [6, 6, 0, 0, 6, 6, 0, 4, 4],
         face: [5],
         danger: [3, 3, 3, 3, 3, 2, 2, 2, 2, 2]
-
-        /*land: [4, 4, 4, 2, 2, 2, 3, 3, 3, 0],
-        clear: [6, 0],
-        live: [0],
-        dead: [1],
-        danger: [0, 0, 0, 4, 4, 4, 0, 0, 0, 3, 3, 3, 2, 2, 2, 3, 3, 3],
-        face: [5]*/
 
     }
 };

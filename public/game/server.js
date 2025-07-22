@@ -36,7 +36,6 @@ Game is ready to start!
 socket.on('readyToStart', function () {
     console.log('Ready to start!!!!');
     startCounter();
-    //create();
 });
 
 /*
@@ -72,7 +71,6 @@ socket.on('disconnect', function (playerId) {
 
 
 function connectLocalPlayer(player) {
-    // Connected, setup a new game.
     console.log('Player 1 added! ' + player.playerId);
     clientGame.newGame(GAME_WIDTH, GAME_HEIGHT, GLOBAL.nrBlockSprites, 0);
     player1 = player;
@@ -80,7 +78,6 @@ function connectLocalPlayer(player) {
 }
 
 function connectServerPlayer(player) {
-    // Player 2 connected;
     Object.keys(player).forEach(function (id) {
         if (player[id].playerId !== socket.id) {
             console.log('Player 2 added! ' + player[id].playerId);

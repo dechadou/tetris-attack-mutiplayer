@@ -9,23 +9,14 @@ app
     .set('views', path.join(__dirname, 'views'))
     .set('view engine', 'ejs')
     .get('/', (req, res) => res.render('index'))
-    .get('/:room', (req, res) => res.render('game'));
-server.listen(PORT, () => console.log(`Listening on ${PORT}`));
+    .get('/solo', (req, res) => res.render('game', {solo: true}))
+    .get('/:room', (req, res) => res.render('game', {solo: false}));
 
-//var index = require('http').Server(app);
 var io = require('socket.io').listen(server);
 
-
-//app.use('/static', express.static(__dirname + '/public'));
-//app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
-
-/*app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/public/index.html');
-});
-app.get('/:room', function (req, res) {
-    res.sendFile(__dirname + '/public/index.html');
-});
-*/
+if (require.main === module) {
+    server.listen(PORT, () => console.log(`Listening on ${PORT}`));
+}
 
 let maxPlayers = 2;
 let players = {};
@@ -36,7 +27,6 @@ io.on('connection', function (socket) {
 
     socket.on("joinRoom", function (room) {
         socket.join(room);
-        // create a new player and add it to our players object
         players[socket.id] = {
             playerId: socket.id,
             isReady: false,
@@ -63,10 +53,8 @@ io.on('connection', function (socket) {
         console.log('Users connected: ' + currentPlayers[room]);
 
 
-        //let the client know that it connected.
         socket.emit('connected', players[socket.id]);
 
-        //Let the other clients know that this player connected, and also if there was already one player connected
         io.in(room).emit('secondPlayerConnected', currentRoomPlayers[room]);
 
         socket.on('setupGame', function (data) {
@@ -80,7 +68,6 @@ io.on('connection', function (socket) {
             }
         });
 
-        //if both players are connected we let both know its ready.
         socket.on('playerReady', function () {
             let readyToPlay = true;
             players[socket.id].isReady = true;
@@ -168,10 +155,8 @@ io.on('connection', function (socket) {
             socket.in(room).broadcast.emit('HistoricBoardUpdated', players[socket.id]);
         })
 
-        // when a player disconnects, remove them from our players object
         socket.on('disconnect', function () {
             console.log('User ' + socket.id + ' disconnected');
-            // remove this player from our players object
             delete players[socket.id];
             currentPlayers[room]--;
             if (currentPlayers[room] === 0) {
@@ -179,7 +164,6 @@ io.on('connection', function (socket) {
                 delete currentPlayers[room];
             }
 
-            // emit a message to all players to remove this player
             io.emit('disconnect', socket.id);
         });
     });
@@ -187,6 +171,5 @@ io.on('connection', function (socket) {
 
 });
 
-/*index.listen(8081, function () {
-    console.log(`Listening on ${index.address().port}`);
-});*/
+
+module.exports = app;

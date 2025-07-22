@@ -4,7 +4,10 @@ let player1 = null;
 let player2 = null;
 let room = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
 
-if (room) {
+if (SOLO_MODE) {
+    setupSoloGame();
+    createSolo();
+} else if (room) {
     socket.emit("joinRoom", room);
     setupGame();
 }
@@ -15,8 +18,12 @@ function setupGame() {
     serverGame = new TaGame('server');
 }
 
+function setupSoloGame() {
+    clientGame = new TaGame('client');
+    clientGame.newGame(GAME_WIDTH, GAME_HEIGHT, GLOBAL.nrBlockSprites, 0);
+}
+
 function create() {
-    //Init Game
     GLOBAL.taGame_list[0] = clientGame;
     GLOBAL.taGame_list[1] = serverGame;
 
@@ -26,15 +33,31 @@ function create() {
     clientGame.resumeGame();
     serverGame.resumeGame();
 
-
     MainLoop.setSimulationTimestep(1000 / UPS);
     MainLoop.setUpdate(update).setDraw(render).start();
 }
 
+function createSolo() {
+    GLOBAL.taGame_list[0] = clientGame;
+    clientGame.resetLevel();
+    clientGame.resumeGame();
+
+    MainLoop.setSimulationTimestep(1000 / UPS);
+    MainLoop.setUpdate(updateSolo).setDraw(render).start();
+}
+
 function update() {
-    if (!clientGame.pause && !serverGame.pause) {
+    if (!clientGame.pause && (!serverGame || !serverGame.pause)) {
         clientGame.tick();
-        serverGame.tick();
-        sendEmitters();
+        if (serverGame) {
+            serverGame.tick();
+            sendEmitters();
+        }
+    }
+}
+
+function updateSolo() {
+    if (!clientGame.pause) {
+        clientGame.tick();
     }
 }

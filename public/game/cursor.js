@@ -14,14 +14,12 @@ class Cursor {
     init(game){
         this.game = game;
 
-        // center the cursor
         this.x = Math.floor(game.width / 2) - 1;
         this.y = Math.floor(game.height / 3);
 
         this.left = game.blocks[this.x][this.y];
         this.right = game.blocks[this.x + 1][this.y];
 
-        // temp sprite
         this.sprite = 1;
 
         if (this.game.type === 'client') {
@@ -32,16 +30,6 @@ class Cursor {
             kd.SPACE.press(this.mv_swap.bind(this));
             kd.C.down(this.game.pushFast.bind(this.game));
 
-            /*let hammertime = new Hammer(canvas);
-            hammertime.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
-
-            hammertime.on('swipeleft', this.mv_left.bind(this));
-            hammertime.on('swiperight', this.mv_right.bind(this));
-            hammertime.on('swipeup', this.mv_up.bind(this));
-            hammertime.on('swipedown',this.mv_down.bind(this));
-            hammertime.on('tap', this.mv_swap.bind(this));
-            hammertime.on('press', this.game.pushFast.bind(this.game));
-             */
             var keys = [
                 kd.LEFT.keyCode,
                 kd.RIGHT.keyCode,
@@ -82,40 +70,49 @@ class Cursor {
     mv_left(){
         if (this.x > 0) {
             this.x--;
-            socket.emit('mv_left', {x: this.x});
+            if (!SOLO_MODE) {
+                socket.emit('mv_left', {x: this.x});
+            }
         }
     }
 
     mv_right(){
         if (this.x < this.game.width - 2) {
             this.x++;
-            socket.emit('mv_right', {x: this.x});
+            if (!SOLO_MODE) {
+                socket.emit('mv_right', {x: this.x});
+            }
         }
     };
 
     mv_down(){
         if (this.y > 0) {
             this.y--;
-            socket.emit('mv_down', {y: this.y});
+            if (!SOLO_MODE) {
+                socket.emit('mv_down', {y: this.y});
+            }
         }
     };
 
     mv_up(){
         if (this.y < this.game.height - 1) {
             this.y++;
-            socket.emit('mv_up', {y: this.y});
+            if (!SOLO_MODE) {
+                socket.emit('mv_up', {y: this.y});
+            }
         }
     };
 
     mv_swap(){
         this.game.swap(this.x, this.y);
-        socket.emit('mv_swap', {x: this.x, y: this.y});
+        if (!SOLO_MODE) {
+            socket.emit('mv_swap', {x: this.x, y: this.y});
+        }
     };
 
 
     render(){
         let frames = CURSORS.animations.idle;
-        //let sprite_index = frames[Math.round(this.game.totalTicks / 10) % frames.length];
         let sprite_index = 0;
         let offset = (((this.game.pushCounter > 0) ? this.game.pushCounter : 0) / this.game.pushTime) * SQ;
         let sx = 0;

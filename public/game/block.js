@@ -111,7 +111,6 @@ class Block {
      */
     newBlock() {
         if (this.sprite === undefined) {
-            // No block number given, so generate random block
             this.sprite = (Math.floor(Math.random() * GLOBAL.nrBlockSprites)) + 1;
         }
     }
@@ -225,7 +224,6 @@ class Block {
                 if ((this.state == STATIC || this.state == SWAP) && this.sprite) {
                     this.animation_state = ANIM_LAND;
                     this.animation_counter = BLOCKS.animations.land.length;
-                    //this.sprite.animations.play('land', GLOBAL.game.time.desiredFps, false);
                 }
                 break;
             case CLEAR:
@@ -242,7 +240,6 @@ class Block {
      * or in the bottom line still being added.
      */
     render(nextLine) {
-        //var offset_y = (this.game.pushCounter / this.game.pushTime) * 16;
         var offset_y = (((this.game.pushCounter > 0) ? this.game.pushCounter : 0) / this.game.pushTime) * SQ;
         var offset_x = 0;
         var x = 0, y = 0;
